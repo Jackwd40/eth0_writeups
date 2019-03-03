@@ -121,7 +121,7 @@ cat wp-config.php
 
 and that dumps a huge mess which is below
 
-```NMA
+```PHP
 <?php
 /**
  * The base configuration for WordPress
