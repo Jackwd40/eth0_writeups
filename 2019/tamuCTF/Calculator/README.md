@@ -19,6 +19,7 @@
 		nmap 172.30.0.0/28
 
 	Once that finishes we can see some interesting open port. Yes port singular. We only have telnet
+
 		Starting Nmap 7.70 ( https://nmap.org ) at 2019-03-02 22:13 CST
 		Nmap scan report for 172.30.0.2
 		Host is up (0.092s latency).
