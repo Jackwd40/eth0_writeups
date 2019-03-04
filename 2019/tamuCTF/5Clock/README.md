@@ -1,10 +1,10 @@
 # TAMUCTF Clock (Network/Pentest) Write-Up
 
 ### Jump straight in
-``TeXt
+``
 
-	nmap 172.30.0.0/28
-
+    nmap 172.30.0.0/28
+    
 	Starting Nmap 7.70 ( https://nmap.org ) at 2019-03-03 21:24 CST
 	Nmap scan report for 172.30.0.2
 	Host is up (0.087s latency).
