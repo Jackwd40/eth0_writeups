@@ -22,7 +22,7 @@
 	All 1000 scanned ports on 172.30.0.14 are closed
 
 	Nmap done: 16 IP addresses (3 hosts up) scanned in 7.01 seconds
-	``
+
 
 2. We telnet open and we also see 2 hosts online. `172.30.0.2 and 172.30.0.3`. Taking knowledge from the previous challenges we will now initiate an ARP spoofing ettercap.
 
