@@ -1,7 +1,6 @@
 # TAMUCTF Clock (Network/Pentest) Write-Up
 
 ### Jump straight in
-``
 
     nmap 172.30.0.0/28
     
